@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".profile_settings">
+    tools:context="com.example.hci2.profile_settings">
 
     <TextView
         android:id="@+id/app_logo_text_Weclome"
