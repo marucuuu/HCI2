@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,11 +17,13 @@ public class HomePage extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home_page);
 
+        // Get references to ImageViews
         ImageView imageView2 = findViewById(R.id.imageView2);
         ImageView imageView3 = findViewById(R.id.imageView3);
         ImageView imageView4 = findViewById(R.id.imageView4);
         ImageView imageView5 = findViewById(R.id.imageView5);
 
+        // Set onClickListener for each ImageView
         imageView2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,10 +57,13 @@ public class HomePage extends AppCompatActivity {
         });
     }
 
+    // Method to animate the view
     private void animateView(View view) {
-        // Apply animation
+        // Load animation
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.scale_animation);
+        // Start animation on the view
         view.startAnimation(animation);
     }
 }
+
 
