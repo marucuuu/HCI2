@@ -3,12 +3,10 @@ package com.example.hci2;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.view.LayoutInflater;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -47,24 +45,13 @@ public class MainActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Apply translate animation to the button
-                TranslateAnimation translateAnimation = new TranslateAnimation(0, -20, 0, 0);
-                translateAnimation.setDuration(50); // Adjust the duration as per your preference
-                translateAnimation.setFillAfter(true);
-                loginButton.startAnimation(translateAnimation);
-
                 String username = usernameEditText.getText().toString().trim();
                 String password = passwordEditText.getText().toString().trim();
 
                 // Check if email and password fields are not empty
                 if (username.isEmpty() || password.isEmpty()) {
                     // Show a toast message indicating the user to enter both email and password
-                    Toast toast = new Toast(MainActivity.this);
-                    LayoutInflater inflater = getLayoutInflater();
-                    View layout = inflater.inflate(R.layout.custom_toast_fill, findViewById(R.id.custom_toast_layout_root));
-                    toast.setView(layout);
-                    toast.setDuration(Toast.LENGTH_SHORT);
-                    toast.show();
+                    Toast.makeText(MainActivity.this, "Please enter both username and password.", Toast.LENGTH_SHORT).show();
                     return; // Exit the method, don't proceed with login
                 }
 
@@ -88,21 +75,11 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             } else {
                                 // If sign in fails, display a message to the user.
-                                Toast toast = new Toast(MainActivity.this);
-                                LayoutInflater inflater = getLayoutInflater();
-                                View layout = inflater.inflate(R.layout.custom_toast_layout1, findViewById(R.id.custom_toast_layout_root));
-                                toast.setView(layout);
-                                toast.setDuration(Toast.LENGTH_SHORT);
-                                toast.show();
+                                Toast.makeText(MainActivity.this, "Authentication failed. Please check your username and password.", Toast.LENGTH_SHORT).show();
                             }
                         });
             }
         });
 
     }
-
-
 }
-
-
-

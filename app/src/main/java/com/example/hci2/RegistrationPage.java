@@ -2,7 +2,6 @@ package com.example.hci2;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,8 +9,12 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -53,13 +56,13 @@ public class RegistrationPage extends AppCompatActivity {
 
                 if (email.isEmpty() || password.isEmpty() || phone.isEmpty() || firstName.isEmpty() || lastName.isEmpty()) {
                     // Display error message if any field is empty
-                    Toast toast = new Toast(RegistrationPage.this);
-                    LayoutInflater inflater = getLayoutInflater();
-                    View layout = inflater.inflate(R.layout.custom_toast_fill, findViewById(R.id.custom_toast_layout_root));
-                    toast.setView(layout);
-                    toast.setDuration(Toast.LENGTH_SHORT);
-                    toast.show();
+                    Toast.makeText(RegistrationPage.this, "All fields are required.", Toast.LENGTH_SHORT).show();
                     return; // Do not proceed with registration if fields are empty
+                }
+                if (!isPasswordValid(password)) {
+                    // Display error message if password is not valid
+                    Toast.makeText(RegistrationPage.this, "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character.", Toast.LENGTH_SHORT).show();
+                    return; // Do not proceed with registration if password is not valid
                 }
 
                 // Create user account with email and password
@@ -67,24 +70,52 @@ public class RegistrationPage extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         // Registration success, update UI with the signed-in user's information
                         FirebaseUser user = mAuth.getCurrentUser();
-                        // Save additional user data to Firebase Realtime Database or Firestore
-                        saveUserDataToDatabase(user.getUid(), email, phone, firstName, lastName);
-                        Toast.makeText(RegistrationPage.this, "Registration successful.",
-                                Toast.LENGTH_SHORT).show();
-                        // Redirect user to MainActivity
-                        Intent intent = new Intent(RegistrationPage.this, MainActivity.class);
-                        startActivity(intent);
-                        finish(); // Close the current activity to prevent user from returning to it via back button
+                        // Check if the phone number already exists in the database
+                        checkPhoneNumberExists(phone, user.getUid(), email, firstName, lastName);
                     } else {
                         // If registration fails, display a message to the user.
-                        Toast toast = new Toast(RegistrationPage.this);
-                        LayoutInflater inflater = getLayoutInflater();
-                        View layout = inflater.inflate(R.layout.custom_toast_regfailed, findViewById(R.id.custom_toast_layout_root));
-                        toast.setView(layout);
-                        toast.setDuration(Toast.LENGTH_SHORT);
-                        toast.show();
+                        if (task.getException() instanceof FirebaseAuthUserCollisionException) {
+                            // If the exception is due to email already being registered
+                            Toast.makeText(RegistrationPage.this, "This email is already registered. Please use a different email.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            // For other authentication failures
+                            Toast.makeText(RegistrationPage.this, "Registration failed. Please try again later.", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
+            }
+        });
+    }
+
+    private boolean isPasswordValid(String password) {
+        // Define your password policy here
+        String passwordPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$";
+        return password.matches(passwordPattern);
+    }
+
+    private void checkPhoneNumberExists(String phone, String userId, String email, String firstName, String lastName) {
+        DatabaseReference usersRef = mDatabase.child("users");
+        usersRef.orderByChild("phone").equalTo(phone).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // If phone number already exists in the database, display an error toast
+                    Toast.makeText(RegistrationPage.this, "This phone number is already registered. Please use a different phone number.", Toast.LENGTH_SHORT).show();
+                } else {
+                    // If phone number does not exist, save user data to Firebase Realtime Database
+                    saveUserDataToDatabase(userId, email, phone, firstName, lastName);
+                    Toast.makeText(RegistrationPage.this, "Registration successful.", Toast.LENGTH_SHORT).show();
+                    // Redirect user to MainActivity
+                    Intent intent = new Intent(RegistrationPage.this, MainActivity.class);
+                    startActivity(intent);
+                    finish(); // Close the current activity to prevent user from returning to it via back button
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handle database error
+                Toast.makeText(RegistrationPage.this, "Error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

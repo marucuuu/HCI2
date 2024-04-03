@@ -5,48 +5,33 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="@color/lightYellow">
 
-
-    <TextView
-        android:id="@+id/app_logo_text_Barbers"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Barbers"
-        android:textSize="36sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.173"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/app_logo_text_Weclome" />
 
     <TextView
         android:id="@+id/app_logo_text_Weclome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="140dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="168dp"
         android:text="Welcome to BNB"
         android:textSize="36sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.355"
+        android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/login_button"
-        style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:layout_width="314dp"
         android:layout_height="51dp"
         android:layout_marginBottom="140dp"
-        android:backgroundTint="#000000"
         android:text="Log In"
         android:textAllCaps="true"
-        android:background="@color/superblack"
         android:textColor="@color/white"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textSize="18sp"
-        android:textStyle="bold"
+        android:backgroundTint="@color/black"
         app:layout_constraintBottom_toTopOf="@+id/sign_up_text_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -107,5 +92,15 @@
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/password_edit_text" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="8dp"
+        android:text="Im waiting for you, please enter your detail"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/app_logo_text_Weclome" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

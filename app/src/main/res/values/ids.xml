@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="custom_toast_layout_root" type="id" />
+    <item name="current_phone_edit_text" type="id" />
+    <item name="current_first_name_edit_text" type="id" />
+    <item name="current_last_name_edit_text" type="id" />
 </resources>
